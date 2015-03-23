@@ -2,6 +2,7 @@ package net.mcviral.dev.plugins.servermanager.main;
 
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,7 +43,11 @@ public class Listeners implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void onPlayerChat(final AsyncPlayerChatEvent event){
 		server.log.info(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
-		server.getServer().broadcastMessage(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
+		for (Player p : server.getServer().getOnlinePlayers()){
+			if (p.hasPermission("sm.spy")){
+				p.sendMessage(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
+			}
+		}
 	}
 	
 }

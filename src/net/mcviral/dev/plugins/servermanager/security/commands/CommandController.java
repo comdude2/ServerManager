@@ -27,6 +27,11 @@ public class CommandController {
 	}
 	
 	public boolean isRestricted(String command){
+		for (RestrictedCommand cmd : commands){
+			if (command.contains(cmd.getName())){
+				return true;
+			}
+		}
 		return false;
 	}
 	

@@ -1,0 +1,4 @@
+name: ServerManager
+main: net.mcviral.dev.plugins.servermanager.main.ServerManager
+version: 1.0
+author: comdude2
