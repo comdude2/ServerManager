@@ -10,6 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class Listeners implements Listener{
@@ -30,6 +31,11 @@ public class Listeners implements Listener{
 		
 	}
 	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerMove(PlayerMoveEvent event){
+		
+	}
+	
 	@EventHandler
 	public void onPlayerTeleport(PlayerTeleportEvent event){
 		
@@ -45,7 +51,7 @@ public class Listeners implements Listener{
 		server.log.info(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
 		for (Player p : server.getServer().getOnlinePlayers()){
 			if (p.hasPermission("sm.spy")){
-				p.sendMessage(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
+				//p.sendMessage(event.getPlayer().getName() + ": " + ChatColor.BLUE + event.getMessage());
 			}
 		}
 	}
