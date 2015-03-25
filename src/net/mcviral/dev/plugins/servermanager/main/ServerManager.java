@@ -9,20 +9,36 @@ import java.io.OutputStream;
 import net.mcviral.dev.plugins.servermanager.util.ErrorReporter;
 import net.mcviral.dev.plugins.servermanager.util.Log;
 //import net.mcviral.dev.plugins.servermanager.util.Mailer;
+import net.mcviral.dev.plugins.servermanager.security.SecurityManager;
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class ServerManager extends JavaPlugin{
 	
 	public Log log = new Log(this.getDescription().getName());
 	public ErrorReporter errorreporter = new ErrorReporter(this, log, "errors/");
 	private SecurityManager security = null;
+	private Listeners listeners = new Listeners(this);
+	private WorldGuardPlugin worldguard = null;
+	private boolean loadedBefore = false;
 	
 	public void onEnable(){
+		worldguard = null;
 		this.saveDefaultConfig();
 		//jarSetup();
-		security = new SecurityManager();
+		security = new SecurityManager(this);
+		if (!loadedBefore){
+			this.getServer().getPluginManager().registerEvents(listeners, this);
+		}
+		worldguard = isworldGuardLoaded();
+		if (worldguard == null){
+			this.getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
 		this.getLogger().info(this.getDescription().getName() + " Enabled!");
 	}
 	
@@ -30,13 +46,24 @@ public class ServerManager extends JavaPlugin{
 		this.getLogger().info(this.getDescription().getName() + " Disabled!");
 	}
 	
+	private WorldGuardPlugin isworldGuardLoaded() {
+	    Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
+	 
+	    // WorldGuard may not be loaded
+	    if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
+	        return null; // Maybe you want throw an exception instead
+	    }
+	 
+	    return (WorldGuardPlugin) plugin;
+	}
+	
+	public WorldGuardPlugin getWorldGuard(){
+		return worldguard;
+	}
+	
 	public SecurityManager getSecurity(){
 		return security;
 	}
-	
-	//public Mailer getMailer(){
-		//return mailer;
-	//}
 	
 	private boolean exists(String path){
 		File f = new File("");
@@ -105,5 +132,9 @@ public class ServerManager extends JavaPlugin{
  
         }
     }
+	
+	public String me(){
+		return (ChatColor.WHITE + "[" + ChatColor.RED + "ServerManager" + ChatColor.WHITE + "] ");
+	}
 	
 }

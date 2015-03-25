@@ -5,5 +5,7 @@
 	<classpathentry kind="lib" path="E:/Main Doccuments/Programming/Java/spigot-1.8.3.jar"/>
 	<classpathentry kind="lib" path="lib/activation.jar"/>
 	<classpathentry kind="lib" path="lib/mail.jar"/>
+	<classpathentry kind="lib" path="E:/Main Doccuments/Programming/Java/worldguard-6.0.0-beta-02.jar"/>
+	<classpathentry kind="lib" path="E:/Main Doccuments/Programming/Java/worldedit-bukkit-6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

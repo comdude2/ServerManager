@@ -5,19 +5,29 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import net.mcviral.dev.plugins.servermanager.main.ServerManager;
+import net.mcviral.dev.plugins.servermanager.security.bans.BanController;
 import net.mcviral.dev.plugins.servermanager.security.commands.CommandController;
 import net.mcviral.dev.plugins.servermanager.util.FileManager;
 
 public class SecurityManager {
 	
 	private ServerManager server = null;
-	@SuppressWarnings("unused")
 	private CommandController cmdcontroller = null;
+	private BanController bancontroller = null;
 	private LinkedList <User> users = new LinkedList <User> ();
 	
 	public SecurityManager(ServerManager server){
 		this.server = server;
+		this.users = new LinkedList <User> ();
 		cmdcontroller = new CommandController(server);
+	}
+	
+	public CommandController getCommandController(){
+		return cmdcontroller;
+	}
+	
+	public BanController getBanController(){
+		return bancontroller;
 	}
 	
 	public LinkedList <User> getUsers() {
@@ -26,6 +36,15 @@ public class SecurityManager {
 	
 	public void setUsers(LinkedList <User> users) {
 		this.users = users;
+	}
+	
+	public User getUser(UUID uuid){
+		for (User u : users){
+			if (u.getUUID().equals(uuid)){
+				return u;
+			}
+		}
+		return null;
 	}
 	
 	public void createUser(UUID uuid){
