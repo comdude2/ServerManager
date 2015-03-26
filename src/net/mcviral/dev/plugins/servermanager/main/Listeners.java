@@ -54,10 +54,12 @@ public class Listeners implements Listener{
 		if (u == null){
 			u = server.getSecurity().createUser(event.getPlayer().getUniqueId());
 		}
-		if (u.getCommandsOnJoin() != null){
-			if (u.getCommandsOnJoin().size() > 0){
-				for (String cmd : u.getCommandsOnJoin()){
-					event.getPlayer().chat(cmd);
+		if (event.getPlayer().hasPermission("sm.cmdonjoin")){
+			if (u.getCommandsOnJoin() != null){
+				if (u.getCommandsOnJoin().size() > 0){
+					for (String cmd : u.getCommandsOnJoin()){
+						event.getPlayer().chat(cmd);
+					}
 				}
 			}
 		}
