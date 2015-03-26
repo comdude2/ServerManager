@@ -9,10 +9,19 @@ import net.mcviral.dev.plugins.servermanager.security.bans.Ban;
 import net.md_5.bungee.api.ChatColor;
 
 import org.bukkit.Location;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.block.Dropper;
+import org.bukkit.block.Furnace;
+import org.bukkit.block.Hopper;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -138,6 +147,115 @@ public class Listeners implements Listener{
 				if (cancel){
 					server.getServer().broadcast(ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.RED + " moved 5 blocks or more, this could be a sign that they're hacking.", "sm.admin");
 				}
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInventoryOpen(InventoryOpenEvent event){
+		if (event.getPlayer() instanceof Player){
+			if (event.getInventory().getHolder() instanceof Chest){
+				Chest chest = (Chest) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof DoubleChest){
+				DoubleChest chest = (DoubleChest) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof Furnace){
+				Furnace chest = (Furnace) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof Hopper){
+				Hopper chest = (Hopper) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof BrewingStand){
+				BrewingStand chest = (BrewingStand) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof Dispenser){
+				Dispenser chest = (Dispenser) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof Sign){
+				Sign chest = (Sign) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}else if (event.getInventory().getHolder() instanceof Dropper){
+				Dropper chest = (Dropper) event.getInventory().getHolder();
+				Location c = chest.getLocation();
+				Location p = event.getPlayer().getLocation();
+				boolean tooFar = cancelMove(p, c);
+				if (tooFar){
+					Player player = (Player) event.getPlayer();
+					event.setCancelled(true);
+					cancelInventory(player);
+				}
+			}
+		}
+	}
+	
+	private void cancelInventory(Player p){
+		if (!p.hasPermission("sm.bypass.inviopen")){
+			//Warn player and active admins.
+			User u = server.getSecurity().getUser(p.getUniqueId());
+			if (u == null){
+				//user doesn't exist, u w0t?
+			}
+			if (u.getOobInfractions() >= 50){
+				Ban b = null;
+				b = server.getSecurity().getBanController().banPlayer(p.getUniqueId(), new Date().getTime(), 0L, "AUTO-BAN: Opening a container not within your reach (Hacking).", false, "ServerManager Plugin");
+				p.kickPlayer("You have been banned.");
+				if (b != null){
+					server.getServer().broadcast(server.me() + ChatColor.YELLOW + p.getName() + ChatColor.RED + " has been banned for getting too many out of bounds infractions (True reason: opening a container more than 5 blocks away) (suspected hacking).", "sm.moderator");
+				}
+			}else{
+				u.setOobInfractions(u.getOobInfractions() + 1);
+				p.sendMessage(server.me() + ChatColor.RED + "You are interacting with an object greater than or equal to 5 blocks from your current location." + ChatColor.DARK_RED + " Out of bounds.");
+				p.sendMessage(server.me() + ChatColor.RED + "If yo persist," + ChatColor.DARK_RED + " you could be banned automatically.");
 			}
 		}
 	}
