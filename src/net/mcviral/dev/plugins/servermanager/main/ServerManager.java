@@ -12,6 +12,7 @@ import net.mcviral.dev.plugins.servermanager.util.Log;
 import net.mcviral.dev.plugins.servermanager.security.SecurityManager;
 import net.md_5.bungee.api.ChatColor;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,17 +20,20 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 public class ServerManager extends JavaPlugin{
 	
-	public Log log = new Log(this.getDescription().getName());
-	public ErrorReporter errorreporter = new ErrorReporter(this, log, "errors/");
+	public Log log = null;
+	public ErrorReporter errorreporter = null;
 	private SecurityManager security = null;
-	private Listeners listeners = new Listeners(this);
+	private Listeners listeners = null;
 	private WorldGuardPlugin worldguard = null;
 	private boolean loadedBefore = false;
 	
 	public void onEnable(){
+		log = new Log(this.getDescription().getName());
+		errorreporter = new ErrorReporter(this, log, "errors/");
+		listeners = new Listeners(this);
 		worldguard = null;
 		this.saveDefaultConfig();
-		//jarSetup();
+		makeDirectories();
 		security = new SecurityManager(this);
 		if (!loadedBefore){
 			this.getServer().getPluginManager().registerEvents(listeners, this);
@@ -38,6 +42,9 @@ public class ServerManager extends JavaPlugin{
 		if (worldguard == null){
 			this.getServer().getPluginManager().disablePlugin(this);
 			return;
+		}
+		for (Player p : this.getServer().getOnlinePlayers()){
+			this.getSecurity().loadUser(p.getUniqueId());
 		}
 		this.getLogger().info(this.getDescription().getName() + " Enabled!");
 	}
@@ -59,6 +66,25 @@ public class ServerManager extends JavaPlugin{
 	
 	public WorldGuardPlugin getWorldGuard(){
 		return worldguard;
+	}
+	
+	public void makeDirectories(){
+		File folder = new File(this.getDataFolder() + "/data/");
+		if (!folder.exists()){
+			folder.mkdirs();
+		}
+		folder = new File(this.getDataFolder() + "/DB/upload/");
+		if (!folder.exists()){
+			folder.mkdirs();
+		}
+		folder = new File(this.getDataFolder() + "/DB/download/");
+		if (!folder.exists()){
+			folder.mkdirs();
+		}
+		folder = new File(this.getDataFolder() + "/security/commands/");
+		if (!folder.exists()){
+			folder.mkdirs();
+		}
 	}
 	
 	public SecurityManager getSecurity(){

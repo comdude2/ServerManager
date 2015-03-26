@@ -50,12 +50,28 @@ public class Listeners implements Listener{
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event){
-		
+		User u = server.getSecurity().loadUser(event.getPlayer().getUniqueId());
+		if (u == null){
+			u = server.getSecurity().createUser(event.getPlayer().getUniqueId());
+		}
+		if (u.getCommandsOnJoin() != null){
+			if (u.getCommandsOnJoin().size() > 0){
+				for (String cmd : u.getCommandsOnJoin()){
+					event.getPlayer().chat(cmd);
+				}
+			}
+		}
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event){
-		
+		User u = server.getSecurity().getUser(event.getPlayer().getUniqueId());
+		if (u != null){
+			server.getSecurity().getUsers().remove(u);
+			server.getSecurity().saveUser(u);
+		}else{
+			//User did not have an instance of User? Wut?
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -95,8 +111,8 @@ public class Listeners implements Listener{
 										}
 										if (u.getOobInfractions() >= 50){
 											Ban b = null;
-											b = server.getSecurity().getBanController().banPlayer();
-											event.getPlayer().kickPlayer("");
+											b = server.getSecurity().getBanController().banPlayer(event.getPlayer().getUniqueId(), new Date().getTime(), 0L, "AUTO-BAN: Going out of bounds (Hacking).", false, "ServerManager Plugin");
+											event.getPlayer().kickPlayer("You have been banned.");
 											if (b != null){
 												server.getServer().broadcast(server.me() + ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.RED + " has been banned for getting too many out of bounds infractions (suspected hacking).", "sm.moderator");
 											}
@@ -168,7 +184,6 @@ public class Listeners implements Listener{
                 + ":" + cal.get(Calendar.SECOND)
                 + (cal.get(Calendar.AM_PM)==0?"AM":"PM")
                 );
- 
     }
 	
 }

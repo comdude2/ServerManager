@@ -9,6 +9,7 @@ public class Ban {
 	private boolean permanent = false;
 	private long bannedAt = 0L;
 	private long expires = 0L;
+	private String bannedBy = null;
 	
 	public Ban(){
 		
@@ -44,6 +45,14 @@ public class Ban {
 
 	public void setExpires(long expires) {
 		this.expires = expires;
+	}
+
+	public String getBannedBy() {
+		return bannedBy;
+	}
+
+	public void setBannedBy(String bannedBy) {
+		this.bannedBy = bannedBy;
 	}
 	
 	

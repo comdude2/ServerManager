@@ -47,13 +47,22 @@ public class SecurityManager {
 		return null;
 	}
 	
-	public void createUser(UUID uuid){
+	public User createUser(UUID uuid){
 		File folder = new File(server.getDataFolder() + "/users/" + uuid.toString() + "/");
 		if (!folder.exists()){
 			folder.mkdirs();
 		}
 		@SuppressWarnings("unused")
 		FileManager fm = new FileManager(server, "users/" + uuid.toString() + "/", "userdetails");
+		return null;
+	}
+	
+	public User loadUser(UUID uuid){
+		return null;
+	}
+	
+	public void saveUser(User u){
+		
 	}
 	
 }

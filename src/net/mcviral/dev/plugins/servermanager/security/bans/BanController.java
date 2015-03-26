@@ -16,7 +16,7 @@ public class BanController {
 		this.setBans(new LinkedList <Ban> ());
 	}
 	
-	public Ban banPlayer(){
+	public Ban banPlayer(UUID uuid, long bannedAt, long expires, String reason, boolean permanent, String bannedBy){
 		return null;
 	}
 	
