@@ -2,3 +2,17 @@ name: ServerManager
 main: net.mcviral.dev.plugins.servermanager.main.ServerManager
 version: 1.0
 author: comdude2
+commands:
+   pvp4:
+      description: This is this plugin's main command.
+      usage: /<command> help
+      permission: pvp.use
+      permission-message: You don't have the required permission to perform this command.
+permissions:
+    doorman.*:
+        description: Gives access to all doorman commands
+        children:
+            doorman.kick: true
+            doorman.ban: true
+            doorman.knock: true
+            doorman.denied: false

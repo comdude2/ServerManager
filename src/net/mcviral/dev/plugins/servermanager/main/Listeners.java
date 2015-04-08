@@ -20,6 +20,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -41,6 +42,14 @@ public class Listeners implements Listener{
 	
 	public Listeners(ServerManager server){
 		this.server = server;
+	}
+	
+	public void register(){
+		server.getServer().getPluginManager().registerEvents(this, server);
+	}
+	
+	public void unregister(){
+		HandlerList.unregisterAll(this);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
